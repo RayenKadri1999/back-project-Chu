@@ -9,17 +9,14 @@ const examencliniqueSchema = new Schema({
     
   NIHSSValue :   {
   type: Number,
-  required: true,
 },
 idNIHSS:{
   type: Schema.Types.ObjectId,
   ref: 'NIHSS',
-  required: true,
 },
 
 LASTInitial :   {
     type: Number,
-    required: true,
   },
 
   ResultExamenNeuroInitial: {
@@ -47,8 +44,7 @@ AuscultationCardiaque :{
 SouffleCarotidien :  {
   type: String,
   enum : ["Oui", "Non"],
-  required: true,
-},       
+},
 
 ResultsExamenGeneral: {
   type: String,
@@ -57,7 +53,6 @@ ResultsExamenGeneral: {
 testDeglutition: {
   testDone: {
     type: Boolean,
-    required: true,
   },
   hasTrouble: {
     type: Boolean,
@@ -65,7 +60,7 @@ testDeglutition: {
   },
   typeOfTrouble: {
     type: String,
-    enum: ["Aux liquides", "Aux solides", "Globale"],
+    enum: ["Aux liquides", "Aux solides", "Globale",""],
     required: function() { return this.testDeglutition.testDone && this.testDeglutition.hasTrouble; },
   },
 },

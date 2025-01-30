@@ -10,17 +10,20 @@ const aspectsSchema = new mongoose.Schema({
     required: true,
   },
 
-  
 
+        AspectsNumber: {
+            type: Number,
+            default: null, // Allows null or can be left unset
+        },
 
-
-    AspectsNumber:{
-      type: Number,
-      required: true,
+        // The details as an array of strings
+        AspectsDetails: {
+            type: [String], // Array of strings
+            default: [],    // Defaults to an empty array if unset
+        },
     },
-    AspectsDetails:{ type: Array, required: true },
-
-  
-});
-
+    {
+        timestamps: true, // Adds createdAt and updatedAt fields
+    }
+);
 export default mongoose.model('ASPECTS', aspectsSchema);

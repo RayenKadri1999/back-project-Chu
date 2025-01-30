@@ -20,8 +20,9 @@ const hospitalisationSchema = Joi.object({
   sortieFaitPar: Joi.string().allow('').optional(),
   dateEntree: Joi.date().required(),
   _id: Joi.string().required(), 
-  status: Joi.string().required(), 
-  dateSortie: Joi.date().allow('').optional(), 
+  status: Joi.string().required(),
+  dateSortie: Joi.alternatives().try(Joi.date(), Joi.string().valid(''), Joi.valid(null)).optional(),
+
   TypeAVC: Joi.string().valid('Infarctus cérébral', 'Hématome cérébral').optional(), 
   dossier: Joi.string().required(), 
  
@@ -75,11 +76,12 @@ export const createHospitalisation = async (req, res, next) => {
 
 export const updateHospitalisation = async (req, res, next) => {
   const { error } = hospitalisationSchema.validate(req.body);
+console.log(req.body)
 
   if (error) {
-   
+console.log(error)
     return res.status(400).json({ error: error.details[0].message });
-    
+
   }
   try {
     
@@ -90,7 +92,7 @@ export const updateHospitalisation = async (req, res, next) => {
     if (!hospitalisation) {
       return next(errorHandler(404, 'Hospitalisation n"existe plus !'));
     }
-    
+
 
 
     // Save the updated hospitalisation to the database
@@ -101,6 +103,7 @@ export const updateHospitalisation = async (req, res, next) => {
 
   } catch (error) {
     if (error.name === 'ValidationError') {
+      console.log(error)
       return res.status(400).json({ error: error.message });
     } 
     next(error);

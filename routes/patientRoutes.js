@@ -9,7 +9,7 @@ const router = express.Router();
 
 router.post('/create',[verifyToken], createPatient);
 
-router.delete('/delete/:id',[verifyToken,authorizeRoles(['superUser','admin'])],  deletePatient);
+router.delete('/delete/:id',verifyToken,authorizeRoles('admin','superUser'),  deletePatient);
 router.post('/update/:id',[verifyToken], updatePatient);
 router.get('/getDetails/:id',[verifyToken], getPatient);
 router.get('/get', [verifyToken], getPatients);

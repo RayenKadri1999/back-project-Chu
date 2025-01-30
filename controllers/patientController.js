@@ -112,23 +112,41 @@ export const updatePatient = async (req, res, next) => {
 };
 
 export const deletePatient = async (req, res, next) => {
+  console.log("Delete Patient Request Received");
+  console.log("Request Params:", req.params);
+  console.log("Request User (Decoded from Token):", req.user); // Assuming the decoded user is available on req.user
 
   try {
-  
+    // Check if the ID is provided
+    if (!req.params.id) {
+      console.error("Error: Patient ID is missing in request parameters");
+      return next(errorHandler(400, "Patient ID is required"));
+    }
+
+    console.log("Looking for patient with ID:", req.params.id);
+
     // Retrieve the patient by ID
     const patient = await Patient.findById(req.params.id);
 
+    console.log("Patient Found:", patient);
+
     // Check if the patient with the given ID exists
     if (!patient) {
-      return next(errorHandler(404, 'Patient not found'));
+      console.error("Error: Patient not found");
+      return next(errorHandler(404, "Patient not found"));
     }
+
+    console.log("Deleting patient with ID:", req.params.id);
 
     // Delete the patient from the database
     await Patient.findByIdAndDelete(req.params.id);
 
-    res.status(200).json('Patient has been deleted!');
+    console.log("Patient deleted successfully");
+    res.status(200).json("Patient has been deleted!");
   } catch (error) {
-    console.log(error.message)
+    console.error("An error occurred while deleting the patient");
+    console.error("Error Message:", error.message);
+    console.error("Error Stack:", error.stack);
     next(error);
   }
 };

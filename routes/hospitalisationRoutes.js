@@ -10,7 +10,7 @@ const router = express.Router();
 router.post('/create',[verifyToken], createHospitalisation);
 
 router.delete('/delete/:id',[ verifyToken,authorizeRoles('superUser','admin')],  deleteHospitalisation);
-router.post('/update/:id',[ verifyToken,authorizeRoles('superUser','admin')], updateHospitalisation);
+router.post('/update/:id', updateHospitalisation);
 router.get('/getDetails/:id',[verifyToken], getHospitalisation);
 router.get('/getAll/:idDossier', [verifyToken], getHospitalisations);
 
