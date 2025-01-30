@@ -34,7 +34,6 @@ const ChangementSchema = new mongoose.Schema({
     NewHospitaliere: { type: Schema.Types.Mixed },
     NewImagerie: { type: Schema.Types.Mixed },
     NewPrehospitaliere: { type: Schema.Types.Mixed },
-    NewHospitaliere: { type: Schema.Types.Mixed },
 
 
     patient: {

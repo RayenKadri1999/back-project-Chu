@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 const Schema = mongoose.Schema;
 
-const irmcerebraleSchema = new mongoose.Schema({
+const irmcerebraleSchema = new Schema({
   matricule: {
     type: String,
     ref: 'Hospitalisation', // Ensure this reference is set up properly in your database
@@ -10,50 +10,60 @@ const irmcerebraleSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    required: true,
-    enum: ['Oui', 'Non'], // Validates the status field
+    enum: ["Oui", "Non"],
+    default: "Non"
   },
   dateIRM: {
     type: Date,
-    required: function () {
-      return this.status === 'Oui';
-    },
+    default: Date.now
   },
   dateFinIRM: {
     type: Date,
-    required: function () {
-      return this.status === 'Oui';
-    },
+    default: Date.now
   },
   IRM_Cerebrale: {
     type: String,
-    required: function () {
-      return this.status === 'Oui';
-    },
-    enum: ['Normale', 'Anormale'], // Validates the possible values
+    enum: ["Normale", "Anormale"],
+    default: ""
   },
   Diffusion1: {
     type: String,
-    required: function () {
-      return this.IRM_Cerebrale === 'Anormale' && this.status === 'Oui';
-    },
-    enum: ['Normale', 'Anormale'], // Validates the possible values
+    enum: ["Normale", "Anormale"],
+    default: ""
   },
   Diffusion2: {
     type: String,
-    required: function () {
-      return this.IRM_Cerebrale === 'Anormale' && this.Diffusion1 === 'Anormale';
-    },
-    enum: ['Lacunaire', 'Non Lacunaire'], // Validates the possible values
+    enum: ["Lacunaire", "Non Lacunaire"],
+    default: ""
   },
   Details: {
-    type: [String], // Array of strings for detailed descriptions
-    required: function () {
-      return this.IRM_Cerebrale === 'Anormale' && this.Diffusion1 === 'Anormale';
-    },
-    default: [],
+    type: [String],
+    default: []
   },
-});
+  checkZone: {
+    CerebralmoyenD: { type: Boolean, default: false },
+    CerebralmoyenG: { type: Boolean, default: false },
+    CerebralanterieurG: { type: Boolean, default: false },
+    CerebralanterieurD: { type: Boolean, default: false },
+    CerebralposterieurG: { type: Boolean, default: false },
+    CerebralposterieurD: { type: Boolean, default: false },
+    PontiqueparamedianG: { type: Boolean, default: false },
+    PontiqueparamedianD: { type: Boolean, default: false },
+    LaterobulbaireG: { type: Boolean, default: false },
+    LaterobulbaireD: { type: Boolean, default: false },
+    Latero_pontiqueG: { type: Boolean, default: false },
+    Latero_pontiqueD: { type: Boolean, default: false },
+    PICAG: { type: Boolean, default: false },
+    PICAD: { type: Boolean, default: false },
+    AICAG: { type: Boolean, default: false },
+    AICAD: { type: Boolean, default: false },
+    ACSG: { type: Boolean, default: false },
+    ACSD: { type: Boolean, default: false },
+    AttributeOption: { type: String, default: "" },
+    JonctionelG: { type: Boolean, default: false },
+    JonctionelD: { type: Boolean, default: false }
+  }
+}, { timestamps: true });
 
 // Pre-save Middleware for Logical Integrity
 irmcerebraleSchema.pre('save', function (next) {
@@ -65,6 +75,29 @@ irmcerebraleSchema.pre('save', function (next) {
     this.Diffusion1 = undefined;
     this.Diffusion2 = undefined;
     this.Details = [];
+    this.checkZone = {
+      CerebralmoyenD: false,
+      CerebralmoyenG: false,
+      CerebralanterieurG: false,
+      CerebralanterieurD: false,
+      CerebralposterieurG: false,
+      CerebralposterieurD: false,
+      PontiqueparamedianG: false,
+      PontiqueparamedianD: false,
+      LaterobulbaireG: false,
+      LaterobulbaireD: false,
+      Latero_pontiqueG: false,
+      Latero_pontiqueD: false,
+      PICAG: false,
+      PICAD: false,
+      AICAG: false,
+      AICAD: false,
+      ACSG: false,
+      ACSD: false,
+      AttributeOption: "",
+      JonctionelG: false,
+      JonctionelD: false
+    };
   }
 
   // If IRM_Cerebrale is not "Anormale", reset related fields
@@ -72,6 +105,29 @@ irmcerebraleSchema.pre('save', function (next) {
     this.Diffusion1 = undefined;
     this.Diffusion2 = undefined;
     this.Details = [];
+    this.checkZone = {
+      CerebralmoyenD: false,
+      CerebralmoyenG: false,
+      CerebralanterieurG: false,
+      CerebralanterieurD: false,
+      CerebralposterieurG: false,
+      CerebralposterieurD: false,
+      PontiqueparamedianG: false,
+      PontiqueparamedianD: false,
+      LaterobulbaireG: false,
+      LaterobulbaireD: false,
+      Latero_pontiqueG: false,
+      Latero_pontiqueD: false,
+      PICAG: false,
+      PICAD: false,
+      AICAG: false,
+      AICAD: false,
+      ACSG: false,
+      ACSD: false,
+      AttributeOption: "",
+      JonctionelG: false,
+      JonctionelD: false
+    };
   }
 
   next();

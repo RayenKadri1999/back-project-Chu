@@ -116,7 +116,6 @@ app.use('/api/hospitalisation', hospitalisationRouter);
 app.use('/api/prehospitaliere', prehospitaliereRouter);
 app.use('/api/hospitaliere', hospitaliereRouter);
 
-
 app.use('/api/imagerie', imagerieRouter);
 app.use('/api/imagerie/flair', flairRouter);
 app.use('/api/imagerie/aspects', ASPECTSRouter);

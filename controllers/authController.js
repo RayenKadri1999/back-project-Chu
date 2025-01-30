@@ -43,9 +43,10 @@ export const signup = async (req, res, next) => {
 
     // Send account credentials to the new user's email
     sendCredentialsEmail(username, password, email);
-
+console.log("success")
     res.status(201).json('User created successfully!');
   } catch (error) {
+    console.log(error)
     next(error);
   }
 };
