@@ -19,6 +19,7 @@ export const createScannerPerfusion = async (req, res, next) => {
  
      return res.status(201).json();
    } catch (error) {
+        console.log(error.message)
      next(error);
      // console.log(error.message)
    }

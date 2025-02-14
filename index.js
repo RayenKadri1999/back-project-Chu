@@ -29,7 +29,7 @@ import nihssRouter from './routes/dossier/nihssRoutes.js';
 import biologieRouter from './routes/dossier/biologieRoutes.js';
 import conclusionsortieRouter from './routes/dossier/conclusionsortieRoutes.js';
 import conclusionSortieHematomeRouter from './routes/dossier/conclusionSortieHematomeRoutes.js';
-
+import conduiteTenirInitialeHematomeRouter  from "./routes/dossier/conduiteTenirInitialeHematomeRoutes.js";
 import conclusioninitialeRouter from './routes/dossier/conclusioninitialeRoutes.js';
 import conduitetenirinitialeRouter from './routes/dossier/conduitetenirinitialeRoutes.js';
 import examencliniqueRouter from './routes/dossier/examencliniqueRoutes.js';
@@ -43,7 +43,9 @@ import rateLimit from "express-rate-limit";
 import helmet  from "helmet";
 import mongoSanitize from 'express-mongo-sanitize';
 import generateRouter  from './routes/generateRoutes.js'
+import etiologieRouter from './routes/dossier/etiologie/EtiologieRoutes.js'
 import conclusionSortieHematome from "./models/DossierMedical/ConclusionSortieHematome.js";
+import etiologieRoutes from "./routes/dossier/etiologie/EtiologieRoutes.js";
 
 dotenv.config();
 mongoose
@@ -133,6 +135,7 @@ app.use('/api/imagerie/irm',IRMCérébraleRouter);
 
 app.use('/api/etiologie/toast',TOASTRouter);
 app.use('/api/etiologie/ascod',ASCODRouter);
+app.use('/api/etiologie', etiologieRouter);
 
 
 app.use('/api/files',generateRouter)
@@ -143,6 +146,8 @@ app.use('/api/conclusionsortiehematome', conclusionSortieHematomeRouter);
 
 app.use('/api/conclusioninitiale', conclusioninitialeRouter);
 app.use('/api/conduitetenirinitiale', conduitetenirinitialeRouter);
+app.use('/api/conduitetenirinitialehematome', conduiteTenirInitialeHematomeRouter);
+
 app.use('/api/examenclinique', examencliniqueRouter);
 app.use('/api/examenscomplementaires', examenscomplementairesRouter);
 app.use('/api/evolutionClassification', evolutionClassificationRouter);

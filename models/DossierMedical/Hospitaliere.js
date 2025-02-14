@@ -1,145 +1,57 @@
-import mongoose from "mongoose";
-const Schema = mongoose.Schema;
-const hospitaliereSchema = new Schema({
-   
+import mongoose from 'mongoose';
 
- Allergies :   {
-  type: String,
-  enum: ["Non", "Oui"],
+const { Schema } = mongoose;
 
-},
+// Define the schema
+const hospitaliereSchema = new Schema(
+    {
+        Allergies: { type: String, default: null },
+        HTA: { type: String, default: null },
+        Hypercholestérolémie: { type: String, default: null },
+        Diabète: { type: String, default: null },
+        Fibrillation_auriculaire: { type: String, default: null },
+        Ancienneté_fibrillation: { type: String, default: null },
+        SAS: { type: String, default: null },
+        SAS_appareillé: { type: String, default: null },
+        AIT: { type: String, default: null },
+        AVC: { type: String, default: null },
+        Cardiopathie_ischémique: { type: String, default: null },
+        Artériopathie: { type: String, default: null },
+        Autres_antécédents: { type: String, default: null },
+        Vit: { type: String, default: null },
+        Latéralité: { type: String, default: null },
+        Profession: { type: String, default: null },
+        Autonomie: { type: String, default: null },
+        Tabagisme: { type: String, default: null },
+        Chicha: { type: String, default: null },
+        Neffa: { type: String, default: null },
+        Consommation_alcool: { type: String, default: null },
+        Rankin_préAVC: { type: Number, default: null },
+        GIR: { type: Number, default: null },
+        Poids: { type: Number, default: null },
+        Taille: { type: Number, default: null },
+        IMC: { type: Number, default: null },
+        HistoireMaladie: { type: String, default: null },
+        TraitementEntrée: { type: String, default: null },
+        matricule: { type: String, ref: "Hospitalisation", required: true },
+        dossier: { type: mongoose.Schema.Types.ObjectId, ref: "Dossier" },
+        dossierMedical: { type: mongoose.Schema.Types.ObjectId, ref: "DossierMedical" }
+    },
+    { timestamps: true } // Automatically add createdAt and updatedAt fields
+);
 
- HTA :   {
-    type: String,
-    enum: ["Non", "Oui"],
+// Pre-save middleware to clean data
+hospitaliereSchema.pre('save', function (next) {
+    const cleanedData = {};
+    Object.keys(this._doc).forEach((key) => {
+        if (this[key] !== null && this[key] !== undefined && this[key] !== '') {
+            cleanedData[key] = this[key];
+        }
+    });
+    this._doc = cleanedData;
+    next();
+});
 
-  },
- Hypercholestérolémie : {
-  type: String,
-  enum: ["Non", "Oui"],
-
-},
- Diabète : {
-  type: String,
-  enum: ["Non", "Oui"],
-
-},
- Fibrillation_auriculaire :{
-    type: String,
-    enum: ["paroxystique", "permanente"],
-
-  },
-  Ancienneté_fibrillation :{
-  type: String,
-  enum: ["Non", "Oui"],
-
-}, 
- SAS :  {
-  type: String,
-  enum: ["Non", "Oui"],
-
-},       
-SAS_appareillé :{
-  type: String,
-  enum: ["Non", "Oui"],
-
-},
-AIT :{
-  type: String,
-  enum: ["Non", "Oui"],
-
-},
- AVC:{
-  type: String,
-  enum: ["ischémique", "hémorragique"],
-
-},
-
- Cardiopathie_ischémique :  {
-  type: String,
-  enum: ["Non", "Oui"],
-
-},
- Artériopathie : {
-  type: String,
-  enum: ["Non", "Oui"],
-
-},
- Autres_antécédents:{
-  type: String,
-
-},
-
-Vit :{
-  type: String,
-  enum: ["seul", "en famille", "en institution","Autre"],
-
-},
- Latéralité :  {
-  type: String,
-
-},
- Profession :  {
-  type: String,
-
-},
- Autonomie : {
-  type: String,
-  enum: ["Totale", "Partielle"],
-
-},
- Tabagisme :  {
-  type: String,
-
-},
- Chicha : {
-  type: String,
-
-},
- Neffa :  {
-  type: String,
-
-},
- Consommation_alcool :  {
-  type: String,
-
-},
- Rankin_préAVC :  {
-  type: Number,
-
-},
- GIR :  {
-  type: Number,
-
-},
- Poids :   {
-  type: Number,
-
-},
- Taille :    {
-  type: Number,
-
-},
-  IMC : {
-    type: Number,
-
-  },
-  matricule: {
-    type: String,
-    ref: 'Hospitalisation',
-
-  },
-
-  HistoireMaladie:{
-    type: String,
-  
-  },
-  TraitementEntrée:{
-    type: String,
-    
-  },
-
-  });
-  
-  export default mongoose.model('Hospitaliere', hospitaliereSchema);
-  
+// Create and export the model
+const Hospitaliere = mongoose.model('Hospitaliere', hospitaliereSchema);
+export default Hospitaliere;

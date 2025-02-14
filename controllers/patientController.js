@@ -22,8 +22,8 @@ const patientSchema = Joi.object({
     .required(),
   _id: Joi.string().required(), 
   Adresse: Joi.string().optional(), // Address
-  telephone: Joi.string().optional(), // Phone number (optional)
-  email: Joi.string().email().optional(), // Email (required)
+  telephone: Joi.string().optional().allow(""), // Phone number (optional)
+  email: Joi.string().email().optional().allow(""), // Email (required)
   dateNaissance: Joi.string().required(), // Date of birth (required)
   aidantPrincipal: Joi.string().allow('').optional(),
   numeroAidantPrincipal: Joi.string().allow('').optional(),

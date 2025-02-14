@@ -6,11 +6,11 @@ import { errorHandler } from '../../utils/error.js';
 export const createConduiteTenirInitiale = async (req, res, next) => {
    try {
     
-     console.log(req.body)
-     
+console.log(req.body)
        await ConduiteTenirInitiale.create(req.body)
       
-     return res.status(201).json();
+     return res.status(201).json()
+       console.log("succes")
    } catch (error) {
     console.log(error.message)
      next(error);
@@ -44,6 +44,7 @@ export const createConduiteTenirInitiale = async (req, res, next) => {
  
 export const updateConduiteTenirInitiale = async (req, res, next) => {
  console.log(" matriculeId")
+    console.log(req.body)
  try {
    const  matriculeId = req.params.id;
    console.log( matriculeId)
@@ -54,7 +55,7 @@ export const updateConduiteTenirInitiale = async (req, res, next) => {
      const update = req.body;
      await conduiteTenirInitiale.updateOne(update);
      
-   
+   console.log("success")
 
    return res.status(201).json();
  } catch (error) {

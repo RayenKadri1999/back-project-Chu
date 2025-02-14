@@ -90,7 +90,6 @@ export const updateHospitaliere = async (req, res, next) => {
     const hospitaliere = await Hospitaliere.findOne({ matricule: matriculeId });
 
     if (!hospitaliere) {
-
       return res.status(404).json({ message: "Hospitaliere not found." });
     }
 

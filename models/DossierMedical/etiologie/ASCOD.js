@@ -11,33 +11,36 @@ const ascodSchema = new mongoose.Schema({
   },
     A:{
       type: Number,
-      required: true,
+      default : null
     },
     S:{
       type: Number,
-      required: true,
-    },
+default : null    },
     C:{
       type: Number,
-      required: true,
+      default : null  ,
     },
     O:{
       type: Number,
-      required: true,
+      default : null  ,
     },
     D:{
       type: Number,
-      required: true,
+      default : null  ,
     },
    
    info:{
     type: String,
-    required: true,
+    default : null  ,
   },
-  
-   
 
 
-});
+    dossier: { type: mongoose.Schema.Types.ObjectId, ref: "Dossier" },
+    dossierMedical: { type: mongoose.Schema.Types.ObjectId, ref: "DossierMedical" }
+
+},{
+    timestamps: true, // Adds createdAt & updatedAt fields
+    minimize: true,} // Prevents storing empty objects
+);
 
 export default mongoose.model('ASCOD', ascodSchema);

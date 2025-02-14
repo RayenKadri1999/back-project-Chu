@@ -9,50 +9,33 @@ const toastSchema = new mongoose.Schema({
     ref: 'Hospitalisation',
     required: true,
   },
-  athérothrombotique:{
-    type: String,
-    enum:["oui","non"],
-    required: true,
-  },
-    athérothrombotiqueContent:{ type: Array, required: true },
-    
-    info:{
-      type: String,
-     
-    },
-    cardioemboliqueContent:{ type: Array, required: true },
-    cardioembolique:{
-      type: String,
-      enum:["oui","non"],
-      required: true,
-    },
 
-    fibrillation_valvulaire:{
-      type: String,
-    
-    },
-    fibrillation_type:{
-      type: String,
-      
-    },
-    fibrillation_anticoagulée:{
-      type: String,
-     
-    },
-    lacune:{
-      type: String,
-      enum:["oui","non"],
-      required: true,
-    },
-    IndeterminéContent:{type: String},
-    
-    Indeterminé:{
-      type: String,
-      enum:["oui","non"],
-      required: true,
-    },
+  dossier: { type: mongoose.Schema.Types.ObjectId, ref: "Dossier" },
+  dossierMedical: { type: mongoose.Schema.Types.ObjectId, ref: "DossierMedical" },
+  atherothrombotique: { type: String, enum: ['oui', 'non'], default: null},
+  atherothrombotiqueContent: { type: [String], default: null },
+  info: { type: String, default: '' },
+  cardioembolique: { type: String, enum: ['oui', 'non'], default: null },
+  cardioemboliqueContent: { type: [String], default:null },
+  fibrillation_valvulaire: { type: String, default: null },
+  fibrillation_type: { type: String, default:null},
+  fibrillation_anticoagulee: { type: String, default: null },
+  lacune: { type: String, enum: ['oui', 'non'], default: null },
+  Indetermine: { type: String, enum: ['oui', 'non'], default: null },
+  IndetermineContent: { type: String, default: null }
 
 
+},{timestamps: true,minimize:true });
+toastSchema.pre('save', function (next) {
+  const cleanedData = {};
+  Object.keys(this._doc).forEach((key) => {
+    if (this[key] !== null && this[key] !== undefined && this[key] !== '') {
+      cleanedData[key] = this[key];
+    }
+  });
+  this._doc = cleanedData;
+  next();
 });
+
 
 export default mongoose.model('TOAST', toastSchema);

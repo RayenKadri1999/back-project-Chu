@@ -1,50 +1,39 @@
 import mongoose from 'mongoose';
-const Schema = mongoose.Schema;
 
-const recommandationSchema = new mongoose.Schema({
-    text: { type: String, required: true }, // Texte principal de la recommandation
-    ajustementTherapeutique: { type: String, required: false }, // Ajustement thérapeutique
-    examensComplementaires: { type: String, required: false }, // Examens complémentaires
+const { Schema } = mongoose;
+
+const conclusionSortieHematomeSchema = new Schema({
+    NIHSSValue: { type: Number, default: null },
+    mRsSortie: { type: Number, default: null },
+    idNIHSS: { type: mongoose.Schema.Types.ObjectId, ref: 'Nihss', default: null },
+    LastSortie: { type: Number, default: null },
+    ModeSortie: { type: String, enum: ['A domicile', 'Transfert dans un autre service', 'Décés'], default: null },
+    TraitementSortie: [{ type: String, default: null }], // Array of strings
+    RecommandationsSortie: [{ // Array of objects
+        text: { type: String, default: null },
+        ajustementTherapeutique: { type: String, default: null },
+        examensComplementaires: { type: String, enum: ['MAPA', 'Autres'], default: null }
+    }],
+    Conclusion: { type: String, default: null },
+    matricule: { type: String, ref: "Hospitalisation", required: true },
+    dossier: { type: mongoose.Schema.Types.ObjectId, ref: "Dossier" },
+    dossierMedical: { type: mongoose.Schema.Types.ObjectId, ref: "DossierMedical" }
+}, {
+    timestamps: true
 });
 
-const conclusionSortieHematomeSchema = new mongoose.Schema({
-    // NIHSS sortie
-    NIHSSValue: { type: Number, required: true },
-
-    idNIHSS: {
-        type: Schema.Types.ObjectId,
-        ref: 'NIHSS',
-        required: true,
-    },
-
-    // mRS sortie
-    mRsSortie: { type: Number, required: true },
-
-    // LAST sortie
-    LastSortie: { type: Number, required: true },
-
-    // Mode sortie
-    ModeSortie: { type: String, required: true },
-
-    // Traitement de sortie
-    TraitementSortie: { type: [String], required: true },
-
-    // Recommandations de sortie
-    RecommandationsSortie: {
-        type: [recommandationSchema], // Utilisation du sous-schéma
-        required: true,
-    },
-
-    Conclusion: {
-        type: String,
-        required: true,
-    },
-
-    matricule: {
-        type: String,
-        ref: 'Hospitalisation',
-        required: true,
-    },
+// Pre-save middleware to clean data
+conclusionSortieHematomeSchema.pre('save', function (next) {
+    const cleanedData = {};
+    Object.keys(this._doc).forEach((key) => {
+        if (this[key] !== undefined && this[key] !== null && this[key] !== '') {
+            cleanedData[key] = this[key];
+        }
+    });
+    this._doc = cleanedData;
+    next();
 });
 
-export default mongoose.model('ConclusionSortieHematome', conclusionSortieHematomeSchema);
+const ConclusionSortieHematome = mongoose.model('ConclusionSortieHematome', conclusionSortieHematomeSchema);
+
+export default ConclusionSortieHematome;

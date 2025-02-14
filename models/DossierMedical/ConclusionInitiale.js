@@ -46,8 +46,18 @@ const conclusioninitialeSchema = new Schema({
     },
 {
     timestamps: true, // Adds createdAt and updatedAt fields
-
+    minimize: true,
   });
-  
+conclusioninitialeSchema.pre('save', function (next) {
+    const cleanedData = {};
+    Object.keys(this._doc).forEach((key) => {
+        if (this[key] !== null && this[key] !== undefined && this[key] !== '') {
+            cleanedData[key] = this[key];
+        }
+    });
+    this._doc = cleanedData;
+    next();
+});
+
   export default mongoose.model('ConclusionInitiale', conclusioninitialeSchema);
   
