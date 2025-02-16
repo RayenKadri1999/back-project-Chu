@@ -5,7 +5,7 @@ import userRouter from './routes/userRoutes.js';
 import authRouter from './routes/authRoutes.js';
 import patientRouter from './routes/patientRoutes.js';
 import hospitalisationRouter from './routes/hospitalisationRoutes.js';
-
+import downloadRouter from "./routes/downloadRoutes.js";
 import dossierRouter from './routes/dossier/dossierRoutes.js';
 import prehospitaliereRouter from './routes/dossier/prehospitaliereRoutes.js';
 import hospitaliereRouter from './routes/dossier/hospitaliereRoutes.js';
@@ -48,8 +48,12 @@ import conclusionSortieHematome from "./models/DossierMedical/ConclusionSortieHe
 import etiologieRoutes from "./routes/dossier/etiologie/EtiologieRoutes.js";
 
 dotenv.config();
+const mongoOptions = {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+};
 mongoose
-  .connect(process.env.MONGO)
+  .connect(process.env.MONGO,mongoOptions)
   .then(() => {
     console.log('Connected to MongoDB!');
   })
@@ -143,6 +147,7 @@ app.use('/api/biologie', biologieRouter);
 app.use('/api/nihss', nihssRouter);
 app.use('/api/conclusionsortie', conclusionsortieRouter);
 app.use('/api/conclusionsortiehematome', conclusionSortieHematomeRouter);
+app.use('/api/download', downloadRouter);
 
 app.use('/api/conclusioninitiale', conclusioninitialeRouter);
 app.use('/api/conduitetenirinitiale', conduitetenirinitialeRouter);
