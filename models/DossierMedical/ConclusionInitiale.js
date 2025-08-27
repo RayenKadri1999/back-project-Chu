@@ -1,63 +1,62 @@
 import mongoose from "mongoose";
 const Schema = mongoose.Schema;
-const conclusioninitialeSchema = new Schema({
-
-
-
-
-
+import BaseTabSchema from "./BaseTabSchema.js";
+const conclusioninitialeSchema = new Schema(
+  {
     ECG: {
-        type: Number,
-        default: null, // Allows null or can be left unset
+      type: Number,
+      default: null, // Allows null or can be left unset
     },
     TP: {
-        type: Number,
-        default: null,
+      type: Number,
+      default: null,
     },
     Ratio_TCA: {
-        type: Number,
-        default: null,
+      type: Number,
+      default: null,
     },
     INR: {
-        type: Number,
-        default: null,
+      type: Number,
+      default: null,
     },
     Plaquettes: {
-        type: Number,
-        default: null,
+      type: Number,
+      default: null,
     },
     Hémoglobine: {
-        type: Number,
-        default: null,
+      type: Number,
+      default: null,
     },
     Dosage: {
-        type: Number,
-        default: null,
+      type: Number,
+      default: null,
     },
     Conclusion: {
-        type: String,
-        default: null,
+      type: String,
+      default: null,
     },
     matricule: {
-    type: String,
-    ref: 'Hospitalisation',
-    required: true,
-  },
+      type: String,
+      ref: "Hospitalisation",
+      required: true,
     },
-{
-    timestamps: true, // Adds createdAt and updatedAt fields
+    reviewInfo: { type: BaseTabSchema, default: () => ({}) },
+  },
+  {
+    timestamps: true,
     minimize: true,
+  },
+);
+
+conclusioninitialeSchema.pre("save", function (next) {
+  const cleanedData = {};
+  Object.keys(this._doc).forEach((key) => {
+    if (this[key] !== null && this[key] !== undefined && this[key] !== "") {
+      cleanedData[key] = this[key];
+    }
   });
-conclusioninitialeSchema.pre('save', function (next) {
-    const cleanedData = {};
-    Object.keys(this._doc).forEach((key) => {
-        if (this[key] !== null && this[key] !== undefined && this[key] !== '') {
-            cleanedData[key] = this[key];
-        }
-    });
-    this._doc = cleanedData;
-    next();
+  this._doc = cleanedData;
+  next();
 });
 
-  export default mongoose.model('ConclusionInitiale', conclusioninitialeSchema);
-  
+export default mongoose.model("ConclusionInitiale", conclusioninitialeSchema);

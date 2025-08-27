@@ -1,8 +1,10 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
+import BaseTabSchema from "./BaseTabSchema.js";
 
 const { Schema } = mongoose;
 
-const conclusionInitialeHematomeSchema = new Schema({
+const conclusionInitialeHematomeSchema = new Schema(
+  {
     ECG: { type: String, default: null },
     TP: { type: Number, default: null },
     Ratio_TCA: { type: Number, default: null },
@@ -13,26 +15,37 @@ const conclusionInitialeHematomeSchema = new Schema({
     Dosage: { type: String, default: null },
     ActivitéAntiXa: { type: Number, default: null },
     matricule: { type: String, ref: "Hospitalisation", required: true },
-    Conclusion: { type: String, default: null }
-    ,
+    Conclusion: { type: String, default: null },
+    reviewInfo: { type: BaseTabSchema, default: () => ({}) },
+
     dossier: { type: mongoose.Schema.Types.ObjectId, ref: "Dossier" },
-    dossierMedical: { type: mongoose.Schema.Types.ObjectId, ref: "DossierMedical" }
-}, {
-    timestamps: true
-});
+    dossierMedical: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "DossierMedical",
+    },
+  },
+  {
+    timestamps: true,
+  },
+);
+
+conclusionInitialeHematomeSchema.add(BaseTabSchema);
 
 // Pre-save middleware to clean data
-conclusionInitialeHematomeSchema.pre('save', function (next) {
-    const cleanedData = {};
-    Object.keys(this._doc).forEach((key) => {
-        if (this[key] !== undefined && this[key] !== null && this[key] !== '') {
-            cleanedData[key] = this[key];
-        }
-    });
-    this._doc = cleanedData;
-    next();
+conclusionInitialeHematomeSchema.pre("save", function (next) {
+  const cleanedData = {};
+  Object.keys(this._doc).forEach((key) => {
+    if (this[key] !== undefined && this[key] !== null && this[key] !== "") {
+      cleanedData[key] = this[key];
+    }
+  });
+  this._doc = cleanedData;
+  next();
 });
 
-const ConclusionInitialeHematome = mongoose.model('ConclusionInitialeHematome', conclusionInitialeHematomeSchema);
+const ConclusionInitialeHematome = mongoose.model(
+  "ConclusionInitialeHematome",
+  conclusionInitialeHematomeSchema,
+);
 
 export default ConclusionInitialeHematome;

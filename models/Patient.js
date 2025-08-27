@@ -8,8 +8,8 @@ const PatientSchema = new mongoose.Schema({
     enum: ["homme", "femme"],
     required: true,
   },
-  numero_dossier:{type:String},
-  _id:{ type: String },
+  numeroDossier:{type:String, unique:true, required:true},
+  _id:{ type: mongoose.Schema.Types.ObjectId, auto: true },
   
   Adresse:{ type: String, required: false },
   telephone: { type: String,default:null, },

@@ -1,4 +1,5 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
+import BaseTabSchema from "./BaseTabSchema.js";
 const Schema = mongoose.Schema;
 const nihssSchema = new mongoose.Schema({
   // Catégorie
@@ -6,45 +7,109 @@ const nihssSchema = new mongoose.Schema({
 
   // Date and Heure
   date: { type: Date, required: false },
- 
 
   // Total auto.
-  totalAuto: { type: Number , required: true },
+  totalAuto: { type: Number, required: true },
 
   // Subcategories
-  vigilance: { type: Number,  enum: [ 0, 1, 2, 3, 4]  , default: 0 , required: false },//0..4
-  orientation: { type: Number, enum: [ 0, 1, 2, 3, 4] ,default: 0  , required: false },//0..4
-  commandes: { type: Number, enum: [ 0, 1, 2, 3, 4] ,default: 0,required: false },//0..4
-  oculomotricite: { type: Number,enum: [ 0, 1, 2, 3, 4] ,default: 0, required: false },//0..4
-  champVisuel: { type: Number,enum: [ 0, 1, 2, 3, 4],default: 0 , required: false },//0..4
-  paralysieFaciale: { type: Number,enum: [ 0, 1, 2, 3, 4] ,default: 0, required: false },//0..4
-//tous les champs //0..4
-
+  vigilance: {
+    type: Number,
+    enum: [0, 1, 2, 3, 4],
+    default: 0,
+    required: false,
+  }, //0..4
+  orientation: {
+    type: Number,
+    enum: [0, 1, 2, 3, 4],
+    default: 0,
+    required: false,
+  }, //0..4
+  commandes: {
+    type: Number,
+    enum: [0, 1, 2, 3, 4],
+    default: 0,
+    required: false,
+  }, //0..4
+  oculomotricite: {
+    type: Number,
+    enum: [0, 1, 2, 3, 4],
+    default: 0,
+    required: false,
+  }, //0..4
+  champVisuel: {
+    type: Number,
+    enum: [0, 1, 2, 3, 4],
+    default: 0,
+    required: false,
+  }, //0..4
+  paralysieFaciale: {
+    type: Number,
+    enum: [0, 1, 2, 3, 4],
+    default: 0,
+    required: false,
+  }, //0..4
+  //tous les champs //0..4
 
   // Sa Motricité membre sup.G
-  motriciteMembreSupG: { type: Number, enum: [ 0, 1, 2, 3, 4],default: 0 ,required: false },
+  motriciteMembreSupG: {
+    type: Number,
+    enum: [0, 1, 2, 3, 4],
+    default: 0,
+    required: false,
+  },
 
   // Motricité membre sup. (D)
-  motriciteMembreSupD: { type: Number,enum: [ 0, 1, 2, 3, 4] ,default: 0, required: false },
+  motriciteMembreSupD: {
+    type: Number,
+    enum: [0, 1, 2, 3, 4],
+    default: 0,
+    required: false,
+  },
 
   // Motricité membre int. (G)
-  motriciteMembreIntG: { type: Number,enum: [ 0, 1, 2, 3, 4] ,default: 0, required: false },
+  motriciteMembreIntG: {
+    type: Number,
+    enum: [0, 1, 2, 3, 4],
+    default: 0,
+    required: false,
+  },
 
   // Motricité membre int. (D)
-  motriciteMembreIntD: { type: Number,enum: [ 0, 1, 2, 3, 4] ,default: 0, required: false },
+  motriciteMembreIntD: {
+    type: Number,
+    enum: [0, 1, 2, 3, 4],
+    default: 0,
+    required: false,
+  },
 
-  ataxie: { type: Number,enum: [ 0, 1, 2, 3, 4] ,default: 0, required: false },
-  sensibilite: { type: Number,enum: [ 0, 1, 2, 3, 4],default: 0 , required: false },
-  langage: { type: Number,enum: [ 0, 1, 2, 3, 4],default: 0 , required: false },
-  dysarthrie: { type: Number, enum: [ 0, 1, 2, 3, 4],default: 0 ,required: false },
-  extinctionNegligence: { type: Number,enum: [ 0, 1, 2, 3, 4],default: 0 , required: false },
+  ataxie: { type: Number, enum: [0, 1, 2, 3, 4], default: 0, required: false },
+  sensibilite: {
+    type: Number,
+    enum: [0, 1, 2, 3, 4],
+    default: 0,
+    required: false,
+  },
+  langage: { type: Number, enum: [0, 1, 2, 3, 4], default: 0, required: false },
+  dysarthrie: {
+    type: Number,
+    enum: [0, 1, 2, 3, 4],
+    default: 0,
+    required: false,
+  },
+  extinctionNegligence: {
+    type: Number,
+    enum: [0, 1, 2, 3, 4],
+    default: 0,
+    required: false,
+  },
   matricule: {
     type: String,
-    ref: 'Hospitalisation',
+    ref: "Hospitalisation",
     required: true,
   },
-  dossierMedical: { type: Schema.Types.ObjectId, ref: ' DossierMedical' },
+  reviewInfo: { type: BaseTabSchema, default: () => ({}) },
 
+  dossierMedical: { type: Schema.Types.ObjectId, ref: " DossierMedical" },
 });
 
-export default mongoose.model('NIHSS', nihssSchema);
+export default mongoose.model("NIHSS", nihssSchema);

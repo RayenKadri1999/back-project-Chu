@@ -20,7 +20,7 @@ const hospitalisationSchema = Joi.object({
   sortieFaitPar: Joi.string().allow('').optional(),
   dateEntree: Joi.date().required(),
   _id: Joi.string().required(), 
-  status: Joi.string().required(),
+  reviewStatus: Joi.string().valid("En cours" , "Accepté" ,"Refusé").required(),
   dateSortie: Joi.alternatives().try(Joi.date(), Joi.string().valid(''), Joi.valid(null)).optional(),
 
   TypeAVC: Joi.string().valid('Infarctus cérébral', 'Hématome cérébral').optional(), 

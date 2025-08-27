@@ -20,7 +20,7 @@ const patientSchema = Joi.object({
   sexe: Joi.string()
     .valid('homme', 'femme') // Allowed values: "homme" or "femme"
     .required(),
-  _id: Joi.string().required(), 
+  numeroDossier: Joi.string().required(), 
   Adresse: Joi.string().optional(), // Address
   telephone: Joi.string().optional().allow(""), // Phone number (optional)
   email: Joi.string().email().optional().allow(""), // Email (required)

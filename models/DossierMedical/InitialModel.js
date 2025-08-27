@@ -1,4 +1,5 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
+import BaseTabSchema from "./BaseTabSchema.js";
 const Schema = mongoose.Schema;
 const initialSchema = new mongoose.Schema({
   // ECG details
@@ -12,7 +13,7 @@ const initialSchema = new mongoose.Schema({
   fibrinogene: { type: String, required: true },
   plaquettes: { type: String, required: true },
   hemoglobine: { type: String, required: true },
-  dosageSpecifique: { type: String, required: true },// activité anti Xa
+  dosageSpecifique: { type: String, required: true }, // activité anti Xa
 
   // Conclusion initiale
   conclusionInitiale: { type: String, required: true },
@@ -22,18 +23,22 @@ const initialSchema = new mongoose.Schema({
   anticoagulationCurative: { type: String, required: true },
   thrombolyseIV: {
     type: String,
-    enum: [ "oui", "non"],
+    enum: ["oui", "non"],
     required: true,
   },
-    dateTIV: { type: Date, required: true },
-    heureTIV: { type: String, required: true },
-    moleculeUtilisee: { type: String, enum: [ "Actilyse", "Metalyse"], required: true },
- matricule: {
+  dateTIV: { type: Date, required: true },
+  heureTIV: { type: String, required: true },
+  moleculeUtilisee: {
     type: String,
-    ref: 'Hospitalisation',
+    enum: ["Actilyse", "Metalyse"],
     required: true,
   },
-
+  matricule: {
+    type: String,
+    ref: "Hospitalisation",
+    required: true,
+  },
+  reviewInfo: { type: BaseTabSchema, default: () => ({}) },
 });
 
-export default mongoose.model('Initial', initialSchema);
+export default mongoose.model("Initial", initialSchema);

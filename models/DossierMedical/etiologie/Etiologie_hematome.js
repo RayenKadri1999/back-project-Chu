@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import BaseTabSchema from '../BaseTabSchema.js';
 
 const { Schema } = mongoose;
 
@@ -18,6 +19,7 @@ const etiologieHematomeSchema = new Schema(
         Indeterminee: { type: String, enum: ['oui', 'non',null], default: null},
         TumeurCerebrale: { type: String, enum: ['oui', 'non',null], default: null},
         info: { type: String, default: null},
+        reviewInfo: { type: BaseTabSchema, default: () => ({}) },
 
         matricule: { type: String, ref: "Hospitalisation", required: true },
         dossier: { type: mongoose.Schema.Types.ObjectId, ref: "Dossier" },

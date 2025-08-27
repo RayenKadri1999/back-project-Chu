@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 const dossierSchema = new Schema({
   matricule: {
     type: String,
-    ref: 'Hospitalisation',
+    ref: "Hospitalisation",
     required: true,
   },
   entreeFaitPar: {
@@ -25,10 +25,14 @@ const dossierSchema = new Schema({
   infarctusCerebral: {
     type: String,
     // enum: ["AIT", "AVC", "trembolyse", "Hématome cérébral", "Stroke mimics", "Thrombose veineuse cérébrale", "Autre"],
-    enum: ["Hématome cérébral","Infarctus cérébral"],
+    enum: ["Hématome cérébral", "Infarctus cérébral"],
     required: true,
   },
+  status: {
+    type: String,
+    enum: ["En cours", "Accepté", "refusé"],
+    default: "En cours",
+  },
 });
-  
-  export default mongoose.model('Dossier', dossierSchema);
-  
+
+export default mongoose.model("Dossier", dossierSchema);

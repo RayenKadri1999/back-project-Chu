@@ -1,4 +1,6 @@
 import ChangementRequest from "../../models/ChangementRequest.js";
+import Hospitalisation from "../../models/Hospitalisation.js";
+import Patient from "../../models/Patient.js";
 import Biologie from "../../models/DossierMedical/Biologie.js";
 import { errorHandler } from '../../utils/error.js';
    
@@ -21,10 +23,11 @@ export const NewRequest = async (req, res, next) => {
         const create = {
             patient : req.body.patient,
             userId : req.body.userId,
+            hospitalisationId: req.body.hospitalisationId,
             status: req.body.status,
             createdAt: req.body.createdAt,
             changesTypes:new Array(req.body.changeType),
-            [`New${req.body.changeType}`]: req.body.Data,
+            changes: req.body.changes,
             // Add other fields you want to update here
           };
         await ChangementRequest.create(create)
@@ -142,28 +145,19 @@ export const NewRequest = async (req, res, next) => {
 
  export const getAllRequestsHistory = async (req, res, next) => {
     
-    try {
-      const limit = parseInt(req.query.limit) || 9;//The number of patients to retrieve (default is 9).
-      const startIndex = parseInt(req.query.startIndex) || 0;
-      const searchTerm = req.query.searchTerm || '';
-      const sort = req.query.sort || 'createdAt';
-      const order = req.query.order || 'desc';
-  
-      const requests = await ChangementRequest.find({
-        $or: [
-          { status: { $regex: searchTerm, $options: 'i' } },
-          { status: { $regex: searchTerm, $options: 'i' } },
-        ],
-      })
-        .sort({ [sort]: order })
-        .limit(limit)
-        .skip(startIndex);
-  
-      return res.status(200).json(requests);
-    } catch (error) {
-        console.log(error.message)
-      next(error);
-    }
+     try {
+    const hospitalisations = await Hospitalisation.find({ reviewStatus: "En cours" });
+
+    const dossierIds = hospitalisations.map(h => h.dossier); // assuming 'patient' field stores patient ID
+    const uniqueDossierIds = [...new Set(dossierIds)];
+
+    // Step 3: Fetch all patients corresponding to these IDs
+    const dossiers = await Patient.find({ _id: { $in: uniqueDossierIds } });
+
+    res.status(200).json(dossiers);
+  } catch (error) {
+    next(error);
+  }
   };
  
 // export const updateBiologie = async (req, res, next) => {

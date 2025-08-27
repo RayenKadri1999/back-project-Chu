@@ -21,6 +21,7 @@ export const verifyToken = (req, res, next) => {
     // Attach the user ID to the request object for use in other middleware/routes
     req.username = decoded.username;
     req.role = decoded.role;
+    req.userId = decoded.userId;
     // Optionally log the user ID for debugging purposes
     console.log(`User ID from token: ${req.username}`);
     console.log(`User Role from token: ${req.role}`);

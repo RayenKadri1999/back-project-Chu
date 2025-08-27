@@ -7,8 +7,12 @@ const HospitalisationSchema = new mongoose.Schema({
   dateEntree: { type: Date, required: true },
   dateSortie:{ type: Date},
   TypeAVC: { type: String, required: true },
-  status:{ type: String, required: true },
   _id: { type: String },
+  reviewStatus: {
+    type: String,
+    enum: ["En cours", "Accepté", "Refusé"],
+    default: "En cours",
+  },
 
  
   // aidantPrincipal: { type: String, required: true },// membre famille (soeur, frere.. )

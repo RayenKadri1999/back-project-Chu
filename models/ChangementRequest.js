@@ -8,6 +8,7 @@ import ExamenComplementaire from "./DossierMedical/ExamenComplementaire.js"
 import Hospitaliere from "./DossierMedical/Hospitaliere.js"
 import Imagerie from "./DossierMedical/ImagerieModel.js"
 import Prehospitaliere from "./DossierMedical/Prehospitaliere.js"
+// import { string } from "joi";
 const Schema = mongoose.Schema;
 
 const ChangementSchema = new mongoose.Schema({
@@ -22,19 +23,26 @@ const ChangementSchema = new mongoose.Schema({
      
     status: { type: String , enum: ["en attente", "approuvée", "rejetée"]},   // Statut de la demande (en attente, approuvée, rejetée)
     createdAt:{ type: Date} ,  // Date de création de la demande
-    updatedAt: { type: Date} , // Date de mise à jour de la demande
+    updatedAt: { type: Date} ,
+    reviewedAt:{type:Date}, // Date de mise à jour de la demande
     adminId: { type: String},  // ID de l'administrateur qui a traité la demande
+    hospitalisationID: { type: mongoose.Schema.Types.ObjectId, ref: "Hospitalisation" , required : true}, 
 
-    NewBiologie: { type: Schema.Types.Mixed},
-    NewConclusionSortie: { type: Schema.Types.Mixed },
-    NewDossier: { type: Schema.Types.Mixed},
-    NewEvolutionClassification: { type: Schema.Types.Mixed },
-    NewExamenClinique: { type: Schema.Types.Mixed },
-    NewExamenComplementaire: { type: Schema.Types.Mixed },
-    NewHospitaliere: { type: Schema.Types.Mixed },
-    NewImagerie: { type: Schema.Types.Mixed },
-    NewPrehospitaliere: { type: Schema.Types.Mixed },
+    // NewBiologie: { type: Schema.Types.Mixed},
+    // NewConclusionSortie: { type: Schema.Types.Mixed },
+    // NewDossier: { type: Schema.Types.Mixed},
+    // NewEvolutionClassification: { type: Schema.Types.Mixed },
+    // NewExamenClinique: { type: Schema.Types.Mixed },
+    // NewExamenComplementaire: { type: Schema.Types.Mixed },
+    // NewHospitaliere: { type: Schema.Types.Mixed },
+    // NewImagerie: { type: Schema.Types.Mixed },
+    // NewPrehospitaliere: { type: Schema.Types.Mixed },
 
+    changes : {
+        type: Map,
+        of : String,
+        default: {}
+    },
 
     patient: {
         type: Schema.Types.ObjectId,

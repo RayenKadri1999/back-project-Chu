@@ -34,7 +34,8 @@ const hospitaliereValidationSchema = Joi.object({
   HistoireMaladie: Joi.string().allow('').optional(),
   TraitementEntrée: Joi.string().allow('').optional(),
   patient: Joi.string().optional()
-}).unknown();
+});
+
 
 // Create a new Hospitaliere record
 export const createHospitaliere = async (req, res, next) => {
@@ -65,7 +66,7 @@ export const getHospitaliereDetails = async (req, res, next) => {
     if (!hospitaliere) {
       return res.status(404).json({ message: "Hospitaliere not found." });
     }
-
+    await hospitaliere.populate("reviewInfo.comments.createdBy","username");
     return res.json(hospitaliere);
   } catch (error) {
     console.log(error.message);
@@ -124,3 +125,9 @@ export const deleteHospitaliere = async (req, res, next) => {
     next(error);
   }
 };
+
+
+export const addCommentHospitaliere = async (req, res, next) => {
+  const { idHospitalisation } = req.params;
+  const { comment, userId } = req.body;
+}

@@ -1,8 +1,10 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
+import BaseTabSchema from "./BaseTabSchema.js";
 
 const { Schema } = mongoose;
 
-const biologieHematomeSchema = new Schema({
+const biologieHematomeSchema = new Schema(
+  {
     Sodium: { type: Number, default: null },
     Potassium: { type: Number, default: null },
     Urée: { type: Number, default: null },
@@ -33,25 +35,34 @@ const biologieHematomeSchema = new Schema({
     Bilirubine_totale: { type: Number, default: null },
     Bilirubine_libre: { type: Number, default: null },
     matricule: { type: String, ref: "Hospitalisation", required: true },
+    reviewInfo: { type: BaseTabSchema, default: () => ({}) },
 
     dossier: { type: mongoose.Schema.Types.ObjectId, ref: "Dossier" },
-    dossierMedical: { type: mongoose.Schema.Types.ObjectId, ref: "DossierMedical" }
-}, {
-    timestamps: true
-});
+    dossierMedical: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "DossierMedical",
+    },
+  },
+  {
+    timestamps: true,
+  },
+);
 
 // Pre-save middleware to clean data
-biologieHematomeSchema.pre('save', function (next) {
-    const cleanedData = {};
-    Object.keys(this._doc).forEach((key) => {
-        if (this[key] !== undefined && this[key] !== null && this[key] !== '') {
-            cleanedData[key] = this[key];
-        }
-    });
-    this._doc = cleanedData;
-    next();
+biologieHematomeSchema.pre("save", function (next) {
+  const cleanedData = {};
+  Object.keys(this._doc).forEach((key) => {
+    if (this[key] !== undefined && this[key] !== null && this[key] !== "") {
+      cleanedData[key] = this[key];
+    }
+  });
+  this._doc = cleanedData;
+  next();
 });
 
-const BiologieHematome = mongoose.model('BiologieHematome', biologieHematomeSchema);
+const BiologieHematome = mongoose.model(
+  "BiologieHematome",
+  biologieHematomeSchema,
+);
 
 export default BiologieHematome;
