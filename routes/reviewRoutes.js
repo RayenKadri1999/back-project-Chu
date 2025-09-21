@@ -3,6 +3,7 @@ import express from 'express';
 import { verifyToken } from '../utils/verifyUser.js';
 // import {authorizeRoles} from "../utils/authorizeRoles.js";
 import { getTabsState } from '../controllers/reviewController.js';
+import { updateTabState } from '../controllers/reviewController.js';
 const router = express.Router();
 import { addCommentController, updateCommentController, deleteCommentController } from '../controllers/dossier/comment/commentController.js';
 
@@ -55,6 +56,14 @@ router.delete("/:model/:idEntity/comments/:commentId", verifyToken, verifyEntity
 );
 
 router.get('/tabStates/:matricule',[verifyToken], getTabsState);
+
+router.put(
+  "/:model/:idEntity/reviewInfo/state",
+  verifyToken,
+  verifyEntity,
+  updateTabState
+);
+
 
 
 export default router;

@@ -42,7 +42,7 @@ const hospitaliereSchema = new Schema(
       ref: "DossierMedical",
     },
   },
-  { timestamps: true }, // Automatically add createdAt and updatedAt fields
+  { timestamps: true },
 );
 
 // Pre-save middleware to clean data

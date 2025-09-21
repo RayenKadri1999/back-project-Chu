@@ -6,6 +6,7 @@ const { Schema } = mongoose;
 function removeEmpty(obj) {
     if (typeof obj !== 'object' || obj === null) return obj;
     Object.keys(obj).forEach((key) => {
+        if(key === '_id') return;
         const value = obj[key];
         if (typeof value === 'object' && value !== null) {
             removeEmpty(value);
@@ -41,7 +42,7 @@ const scannerSchema = new Schema(
             // Expected values: "Normal", "Anormal"
             default: undefined,
         },
-        Occlusin: {
+        Occlusion: {
             type: String,
             default: undefined,
         },
@@ -110,7 +111,7 @@ scannerSchema.pre('save', function (next) {
     if (this.status === 'Non') {
         this.DateScanner = undefined;
         this.AngioscanTSA_Willis = undefined;
-        this.Occlusin = undefined;
+        this.Occlusion = undefined;
         this.Stenose = undefined;
         this.StenosePercent = undefined;
         this.Description = undefined;
@@ -127,7 +128,7 @@ scannerSchema.pre('save', function (next) {
     } else {
         // If AngioscanTSA_Willis is "Normal", clear occlusion/stenosis and related fields.
         if (this.AngioscanTSA_Willis === 'Normal') {
-            this.Occlusin = undefined;
+            this.Occlusion = undefined;
             this.ACGauche = undefined;
             this.ACDroite = undefined;
             this.troncbasilaire = 'non';

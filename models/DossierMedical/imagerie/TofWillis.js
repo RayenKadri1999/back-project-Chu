@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
 const { Schema } = mongoose;
 
@@ -7,15 +7,17 @@ const { Schema } = mongoose;
  * from an object. This helps in keeping the MongoDB document lean.
  */
 function removeEmpty(obj) {
-    if (typeof obj !== 'object' || obj === null) return obj;
+    if (typeof obj !== "object" || obj === null) return obj;
     Object.keys(obj).forEach((key) => {
+        if (key === "_id") return;
+
         const value = obj[key];
-        if (typeof value === 'object' && value !== null) {
+        if (typeof value === "object" && value !== null) {
             removeEmpty(value);
             if (Object.keys(value).length === 0) {
                 delete obj[key];
             }
-        } else if (value === '' || value === null || value === undefined) {
+        } else if (value === "" || value === null || value === undefined) {
             delete obj[key];
         }
     });
@@ -26,17 +28,17 @@ const tofwillisSchema = new Schema(
     {
         matricule: {
             type: String,
-            ref: 'Hospitalisation',
+            ref: "Hospitalisation",
             required: true,
         },
         status: {
             type: String,
-            enum: ['Normal', 'Anormal'],
+            enum: ["Normal", "Anormal"],
             required: true,
-            default: 'Normal',
+            default: "Normal",
         },
         // Fields used when status is "Anormal"
-        occlusion: {
+        Occlusion: {
             type: String,
             default: undefined,
         },
@@ -65,10 +67,10 @@ const tofwillisSchema = new Schema(
 );
 
 // Pre-save middleware to enforce business logic and remove empty fields.
-tofwillisSchema.pre('save', function (next) {
+tofwillisSchema.pre("save", function (next) {
     // When status is "Normal", clear all related fields.
-    if (this.status === 'Normal') {
-        this.occlusion = undefined;
+    if (this.status === "Normal") {
+        this.Occlusion = undefined;
         this.Stenose = undefined;
         this.StenosePercent = undefined;
         this.M1G = undefined;
@@ -80,6 +82,6 @@ tofwillisSchema.pre('save', function (next) {
     next();
 });
 
-const TofWillis = mongoose.model('TofWillis', tofwillisSchema);
+const TofWillis = mongoose.model("TofWillis", tofwillisSchema);
 
 export default TofWillis;

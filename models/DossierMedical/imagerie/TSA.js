@@ -8,6 +8,7 @@ const { Schema } = mongoose;
 function removeEmpty(obj) {
     if (typeof obj !== 'object' || obj === null) return obj;
     Object.keys(obj).forEach((key) => {
+        if (key === "_id") return;
         const value = obj[key];
         if (typeof value === 'object' && value !== null) {
             removeEmpty(value);

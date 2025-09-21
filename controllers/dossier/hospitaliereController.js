@@ -3,6 +3,24 @@ import { errorHandler } from "../../utils/error.js";
 import Joi from "joi";
 
 // Input validation schema
+
+const commentSchema = Joi.object({
+  text: Joi.string().required(), // adjust if your CommentSchema has other fields
+  createdBy: Joi.string().hex().length(24).required(),
+  createdAt: Joi.date().optional()
+});
+
+const reviewInfoSchema = Joi.object({
+  status: Joi.string()
+    .valid("En cours", "Accepté", "refusé", "A refaire")
+    .default("En cours"),
+  reviewedBy: Joi.string().hex().length(24).allow(null).optional(),
+  lastReviewedAt: Joi.date().allow(null).optional(),
+  comments: Joi.array().items(commentSchema).optional(),
+  createdBy: Joi.string().hex().length(24).optional(),
+  updatedBy: Joi.string().hex().length(24).optional()
+}).optional();
+
 const hospitaliereValidationSchema = Joi.object({
   Allergies: Joi.string().valid("Non",  "Oui","").allow('').optional(),
   HTA: Joi.string().valid("Non",  "Oui","").allow('').optional(),
@@ -33,7 +51,12 @@ const hospitaliereValidationSchema = Joi.object({
   matricule: Joi.string().optional(),
   HistoireMaladie: Joi.string().allow('').optional(),
   TraitementEntrée: Joi.string().allow('').optional(),
-  patient: Joi.string().optional()
+  patient: Joi.string().optional(),
+  reviewInfo : reviewInfoSchema,
+  createdAt: Joi.date().optional(),
+  updatedAt: Joi.date().optional()
+
+
 });
 
 
