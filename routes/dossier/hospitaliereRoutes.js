@@ -1,21 +1,25 @@
 import express from 'express';
-//import { verifyToken } from '../../utils/verifyUser.js';
-
-import { verifyToken } from '../../utils/verifyUser.js';       
-import { createHospitaliere, getHospitaliereDetails, updateHospitaliere } from '../../controllers/dossier/hospitaliereController.js';
+import { verifyToken } from '../../utils/verifyUser.js';
 import { authorizeRoles } from '../../utils/authorizeRoles.js';
-// import { addCommentController, updateCommentHospitaliere } from '../../controllers/dossier/comment/commentController.js';
-
-
+import {
+  createHospitaliere,
+  getHospitaliereDetails,
+  updateHospitaliere,
+  deleteHospitaliere
+} from '../../controllers/dossier/hospitaliereController.js';
 
 const router = express.Router();
 
+// All routes require authentication
+router.use(verifyToken);
 
-router.post('/create',[verifyToken], createHospitaliere);
-router.get('/getDetails/:id',[verifyToken], getHospitaliereDetails);
-router.post('/update/:id',[verifyToken,authorizeRoles('admin')], updateHospitaliere);
-// router.post('/addComment/:idHospitalisation',[verifyToken], addCommentHospitaliere);
-// router.post("/updateComment/:idHospitalisation/:idComment",[verifyToken], updateCommentHospitaliere);
-
+// Create
+router.post('/', createHospitaliere);
+// Read
+router.get('/:id', getHospitaliereDetails);
+// Update
+router.put('/:id', authorizeRoles('admin'), updateHospitaliere);
+// Delete
+router.delete('/:id', authorizeRoles('admin'), deleteHospitaliere);
 
 export default router;
