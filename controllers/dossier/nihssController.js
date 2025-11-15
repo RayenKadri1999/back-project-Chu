@@ -98,6 +98,7 @@ export const updateNihss = async (req, res, next) => {
     
 
      const update = req.body;
+     console.log("updated nihss: ", update);
      await nihss.updateOne(update);
      
    

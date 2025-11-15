@@ -13,6 +13,11 @@ const HospitalisationSchema = new mongoose.Schema({
     enum: ["En cours", "Accepté", "Refusé"],
     default: "En cours",
   },
+  status: {
+    type: String,
+    enum: ["En cours", "Finie"],
+    default: "En cours",
+  },
 
  
   // aidantPrincipal: { type: String, required: true },// membre famille (soeur, frere.. )

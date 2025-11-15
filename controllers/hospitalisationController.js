@@ -21,6 +21,7 @@ const hospitalisationSchema = Joi.object({
   dateEntree: Joi.date().required(),
   _id: Joi.string().required(), 
   reviewStatus: Joi.string().valid("En cours" , "Accepté" ,"Refusé").required(),
+  status: Joi.string().valid("En cours", "Finie").optional(),
   dateSortie: Joi.alternatives().try(Joi.date(), Joi.string().valid(''), Joi.valid(null)).optional(),
 
   TypeAVC: Joi.string().valid('Infarctus cérébral', 'Hématome cérébral').optional(), 
@@ -76,34 +77,46 @@ export const createHospitalisation = async (req, res, next) => {
 
 export const updateHospitalisation = async (req, res, next) => {
   const { error } = hospitalisationSchema.validate(req.body);
-console.log(req.body)
+  console.log('Request body:', req.body);
 
   if (error) {
-console.log(error)
+    console.log('Validation error:', error);
     return res.status(400).json({ error: error.details[0].message });
-
   }
+  
   try {
-    
     // Retrieve the hospitalisation by ID
     const hospitalisation = await Hospitalisation.findById(req.params.id);
 
     // Check if the hospitalisation with the given ID exists
     if (!hospitalisation) {
-      return next(errorHandler(404, 'Hospitalisation n"existe plus !'));
+      return next(errorHandler(404, 'Hospitalisation n\'existe plus !'));
     }
 
+    // Filter out undefined, null, and empty string values
+    const update = {};
+    Object.keys(req.body).forEach(key => {
+      if (req.body[key] !== undefined && req.body[key] !== null && req.body[key] !== '') {
+        update[key] = req.body[key];
+      }
+    });
 
+    console.log('Update data:', update);
+    
+    // Use findByIdAndUpdate instead of updateOne for better error handling
+    const updatedHospitalisation = await Hospitalisation.findByIdAndUpdate(
+      req.params.id, 
+      update, 
+      { new: true, runValidators: true }
+    );
 
-    // Save the updated hospitalisation to the database
-    const update = req.body;
-    await hospitalisation.updateOne(update);
-   res.status(201).json('Hospitalisation has been updated!');
-
-
+    res.status(200).json({
+      message: 'Hospitalisation has been updated!',
+      hospitalisation: updatedHospitalisation
+    });
   } catch (error) {
+    console.log('Update error:', error);
     if (error.name === 'ValidationError') {
-      console.log(error)
       return res.status(400).json({ error: error.message });
     } 
     next(error);

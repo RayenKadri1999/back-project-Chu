@@ -96,19 +96,44 @@ export const getHospitaliereDetails = async (req, res, next) => {
 export const updateHospitaliere = async (req, res, next) => {
   try {
     const matriculeId = req.params.id;
+    console.log('Update request for matricule:', matriculeId);
+    console.log('Request body:', req.body);
+    
     const { error, value } = hospitaliereValidationSchema.validate(req.body);
     if (error) {
+      console.log('Validation error:', error);
       return res.status(400).json({ error: error.details[0].message });
     }
+    
     const hospitaliere = await Hospitaliere.findOne({ matricule: matriculeId });
     if (!hospitaliere) {
+      console.log('Hospitaliere not found for matricule:', matriculeId);
       return res.status(404).json({ message: "Hospitaliere not found." });
     }
-    const updateData = { ...value };
+    
+    // Filter out null, undefined, and empty string values
+    const updateData = {};
+    Object.keys(value).forEach(key => {
+      if (value[key] !== undefined && value[key] !== null && value[key] !== '') {
+        updateData[key] = value[key];
+      }
+    });
+    
     delete updateData._id;
-    await hospitaliere.updateOne({ $set: updateData });
-    return res.status(200).json({ message: "Hospitaliere updated successfully." });
+    console.log('Filtered update data:', updateData);
+    
+    const updatedHospitaliere = await Hospitaliere.findOneAndUpdate(
+      { matricule: matriculeId },
+      { $set: updateData },
+      { new: true, runValidators: true }
+    );
+    
+    return res.status(200).json({ 
+      message: "Hospitaliere updated successfully.",
+      data: updatedHospitaliere
+    });
   } catch (error) {
+    console.log('Update error:', error);
     next(error);
   }
 };

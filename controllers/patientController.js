@@ -28,9 +28,9 @@ const patientSchema = Joi.object({
   aidantPrincipal: Joi.string().allow('').optional(),
   numeroAidantPrincipal: Joi.string().allow('').optional(),
   signatureDocteur: Joi.string().allow('').optional(),
-  numero_dossier:Joi.string().allow("").optional(),
   createdAt: Joi.string().optional(), // createdAt (optional)
   updatedAt: Joi.string().optional(), // updatedAt (optional)
+  _id: Joi.string().optional(), // MongoDB ID (optional)
 
   __v:Joi.number().optional(),
 });
@@ -80,6 +80,7 @@ export const updatePatient = async (req, res, next) => {
    const { error } = patientSchema.validate(req.body);
 
   if (error) {
+    console.log(error)
     return res.status(400).json({ error: error.details[0].message });
   }
 
@@ -93,20 +94,35 @@ export const updatePatient = async (req, res, next) => {
       return next(errorHandler(404, 'Patient not found'));
     }
     
+    // Filter out undefined, null, and empty string values
+    const update = {};
+    Object.keys(req.body).forEach(key => {
+      if (req.body[key] !== undefined && req.body[key] !== null && req.body[key] !== '') {
+        update[key] = req.body[key];
+      }
+    });
 
-    // Save the updated patient to the database
-    const update = req.body;
-    console.log(update)
-    await patient.updateOne(update);
+    console.log('Update data:', update);
     
+    // Use findByIdAndUpdate instead of updateOne for better error handling
+    const updatedPatient = await Patient.findByIdAndUpdate(
+      req.params.id, 
+      update, 
+      { new: true, runValidators: true }
+    );
 
-    // const updatedPatient = await patient.save();
-
-    res.status(201).json('Patient has been updated!');
+    res.status(200).json({
+      message: 'Patient has been updated!',
+      patient: updatedPatient
+    });
   } catch (error) {
+    console.log('Update error:', error);
     if (error.name === 'ValidationError') {
       return res.status(400).json({ error: error.message });
-    } 
+    }
+    if (error.name === 'MongoServerError' && error.code === 11000) {
+      return res.status(409).json({ error: 'Le numéro de dossier existe déjà!' });
+    }
     next(error);
   }
 };

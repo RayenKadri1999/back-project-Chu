@@ -13,5 +13,6 @@ router.delete('/delete/:id',verifyToken,authorizeRoles('admin','superUser'),  de
 router.post('/update/:id',[verifyToken], updatePatient);
 router.get('/getDetails/:id',[verifyToken], getPatient);
 router.get('/get', [verifyToken], getPatients);
+router.get('/getDossiers/:id',[verifyToken], getPatientDossiers);
 
 export default router;

@@ -10,16 +10,14 @@ import {
 
 const router = express.Router();
 
-// All routes require authentication
-router.use(verifyToken);
-
 // Create
-router.post('/', createHospitaliere);
+router.post('/', verifyToken, createHospitaliere);
 // Read
-router.get('/:id', getHospitaliereDetails);
+router.get('/:id', verifyToken, getHospitaliereDetails);
 // Update
-router.put('/:id', authorizeRoles('admin'), updateHospitaliere);
+router.put('/:id', verifyToken, updateHospitaliere);
+router.post('/update/:id', verifyToken, updateHospitaliere);
 // Delete
-router.delete('/:id', authorizeRoles('admin'), deleteHospitaliere);
+router.delete('/:id', verifyToken, authorizeRoles('admin'), deleteHospitaliere);
 
 export default router;
