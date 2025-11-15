@@ -13,7 +13,7 @@ const router = express.Router();
 // Create
 router.post('/', verifyToken, createHospitaliere);
 // Read
-router.get('/:id', verifyToken, getHospitaliereDetails);
+router.get('/getDetails/:id', verifyToken, getHospitaliereDetails);
 // Update
 router.put('/:id', verifyToken, updateHospitaliere);
 router.post('/update/:id', verifyToken, updateHospitaliere);
