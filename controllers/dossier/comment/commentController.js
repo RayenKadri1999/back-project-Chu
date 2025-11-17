@@ -1,5 +1,25 @@
 import mongoose from "mongoose";
 
+export const getCommentsController = async (modelName, req, res, next) => {
+  try {
+    const Model = mongoose.model(modelName);
+    const { idEntity } = req.params;
+
+    const entity = await Model.findOne({ matricule: idEntity })
+      .populate("reviewInfo.comments.createdBy", "username email");
+    
+    if (!entity) {
+      return res.status(404).json({ success: false, message: `${modelName} not found` });
+    }
+
+    res.status(200).json({
+      success: true,
+      comments: entity.reviewInfo.comments || [],
+    });
+  } catch (err) {
+    next(err);
+  }
+};
 
 export const addCommentController = async (modelName, req, res, next) => {
   try {
@@ -12,7 +32,7 @@ export const addCommentController = async (modelName, req, res, next) => {
       return res.status(401).json({ success: false, message: "Unauthorized" });
     }
 
-    const entity = await Model.findById(idEntity);
+    const entity = await Model.findOne({ matricule: idEntity });
     if (!entity) {
       return res.status(404).json({ success: false, message: `${modelName} not found` });
     }
@@ -51,7 +71,13 @@ export const updateCommentController = async (modelName, req, res, next) => {
     if (!userId) 
       return res.status(401).json({ success: false, message: "Unauthorized" });
 
-    const entity = await Model.findById(idEntity);
+    // Validate ObjectId formats
+    // Validate comment ObjectId format
+    if (!mongoose.Types.ObjectId.isValid(commentId)) {
+      return res.status(400).json({ success: false, message: "Invalid comment ID format" });
+    }
+
+    const entity = await Model.findOne({ matricule: idEntity });
     if (!entity) 
       return res.status(404).json({ success: false, message: `${modelName} not found` });
 
@@ -96,7 +122,12 @@ export const deleteCommentController = async (modelName, req, res, next) => {
 
     if (!userId) return res.status(401).json({ success: false, message: "Unauthorized" });
 
-    const entity = await Model.findById(idEntity);
+    // Validate comment ObjectId format
+    if (!mongoose.Types.ObjectId.isValid(commentId)) {
+      return res.status(400).json({ success: false, message: "Invalid comment ID format" });
+    }
+
+    const entity = await Model.findOne({ matricule: idEntity });
     if (!entity) return res.status(404).json({ success: false, message: `${modelName} not found` });
 
     const comment = entity.reviewInfo.comments.find(c => c._id.toString() === commentId);

@@ -5,10 +5,17 @@
 export const createprehospitaliere = async (req, res, next) => {
     try {
       const  prehospitaliereData  = req.body;
-  console.log("wsel")
-      // Create a new prehospitaliere instance
-      //  const prehospitaliereInstance = new Prehospitaliere(prehospitaliereData);
-        await Prehospitaliere.create(req.body)
+      
+      // Clean enum values for backward compatibility
+      if (prehospitaliereData.quiAppelNeurologue === "Autre") {
+        prehospitaliereData.quiAppelNeurologue = "Autres";
+      }
+      if (prehospitaliereData.motifAppel === "Autre motif") {
+        prehospitaliereData.motifAppel = "Autres";
+      }
+      
+      console.log("Creating with cleaned data:", prehospitaliereData);
+      await Prehospitaliere.create(prehospitaliereData)
        
   
       
@@ -36,8 +43,18 @@ export const createprehospitaliere = async (req, res, next) => {
         return res.status(404).json({ message: 'Prehospitaliere not found.' });
       
       }
-      console.log( prehospitaliere )
-            return res.json( prehospitaliere );
+      
+      // Clean enum values when returning data for backward compatibility
+      const cleanedData = prehospitaliere.toObject();
+      if (cleanedData.quiAppelNeurologue === "Autre") {
+        cleanedData.quiAppelNeurologue = "Autres";
+      }
+      if (cleanedData.motifAppel === "Autre motif") {
+        cleanedData.motifAppel = "Autres";
+      }
+      
+      console.log("Returning cleaned data:", cleanedData);
+      return res.json(cleanedData);
       
     } catch (error) {
       
@@ -56,9 +73,18 @@ export const updatePrehospitaliere = async (req, res, next) => {
       
     const prehospitaliere = await Prehospitaliere.findOne({ matricule : matriculeId})
      
-
-      const update = req.body;
-      await prehospitaliere.updateOne(update);
+    const update = req.body;
+    
+    // Clean enum values for backward compatibility
+    if (update.quiAppelNeurologue === "Autre") {
+      update.quiAppelNeurologue = "Autres";
+    }
+    if (update.motifAppel === "Autre motif") {
+      update.motifAppel = "Autres";
+    }
+    
+    console.log("Updating with cleaned data:", update);
+    await prehospitaliere.updateOne(update);
       
     
 

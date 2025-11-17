@@ -19,6 +19,7 @@ const prehospitalSchema = new mongoose.Schema(
         "Urgences Hached",
         "Consultations externes",
         "Autres",
+        "Autre", // Temporary - for backward compatibility with existing data
       ],
       required: false,
     },
@@ -35,6 +36,7 @@ const prehospitalSchema = new mongoose.Schema(
         "Vertiges",
         "Trouble de la conscience",
         "Autres",
+        "Autre motif", // Temporary - for backward compatibility with existing data
         "",
       ],
       required: false, // Ensures it is required only if defined
@@ -55,6 +57,30 @@ const prehospitalSchema = new mongoose.Schema(
 
 prehospitalSchema.pre("save", function (next) {
   cleanObject(this);
+  
+  // Clean enum values for backward compatibility
+  if (this.quiAppelNeurologue === "Autre") {
+    this.quiAppelNeurologue = "Autres";
+  }
+  if (this.motifAppel === "Autre motif") {
+    this.motifAppel = "Autres";
+  }
+  
+  next();
+});
+
+// Also clean data for update operations
+prehospitalSchema.pre(["updateOne", "findOneAndUpdate"], function (next) {
+  const update = this.getUpdate();
+  
+  // Clean enum values in update operations
+  if (update.quiAppelNeurologue === "Autre") {
+    update.quiAppelNeurologue = "Autres";
+  }
+  if (update.motifAppel === "Autre motif") {
+    update.motifAppel = "Autres";
+  }
+  
   next();
 });
 

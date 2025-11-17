@@ -100,7 +100,7 @@ export const signin = async (req, res, next) => {
                               {
                                 algorithm: 'HS256',
                                 allowInsecureKeySizes: true,
-                                expiresIn: 3600, // 1 hours
+                                expiresIn: 604800, // 7 days
                               });
 
       res.status(200).send({

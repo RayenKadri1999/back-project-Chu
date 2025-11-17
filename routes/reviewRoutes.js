@@ -5,7 +5,7 @@ import { verifyToken } from '../utils/verifyUser.js';
 import { getTabsState } from '../controllers/reviewController.js';
 import { updateTabState } from '../controllers/reviewController.js';
 const router = express.Router();
-import { addCommentController, updateCommentController, deleteCommentController } from '../controllers/dossier/comment/commentController.js';
+import { addCommentController, updateCommentController, deleteCommentController, getCommentsController } from '../controllers/dossier/comment/commentController.js';
 
 
 export const allowedEntities = [
@@ -39,6 +39,11 @@ const verifyEntity = (req, res, next) => {
   }
   next();
 };
+
+//get comments for an Entity
+router.get("/:model/:idEntity/comments", verifyToken, verifyEntity, (req, res, next) =>
+  getCommentsController(req.params.model, req, res, next)
+);
 
 //add a comment to an Entity
 router.post("/:model/:idEntity/comments", verifyToken, verifyEntity, (req, res, next) =>

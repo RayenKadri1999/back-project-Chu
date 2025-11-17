@@ -154,7 +154,7 @@ export const signIn = async (req, res, next) => {
         {
           algorithm: 'HS256',
           allowInsecureKeySizes: true,
-          expiresIn: 86400, // 24 hours
+          expiresIn: 604800, // 7 days
         });
 
       res.status(200).send({
